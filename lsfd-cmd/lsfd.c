@@ -2010,7 +2010,7 @@ static void mark_select_fds_as_multiplexed(char *buf,
 
 	n = process_vm_readv(pid, local, 3, remote, 3, 0);
 	if (n < 0 || n != expected_n)
-			return;
+		return;
 
 	list_for_each (f, &proc->files) {
 		struct file *file = list_entry(f, struct file, files);
