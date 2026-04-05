@@ -1932,6 +1932,7 @@ static void mark_poll_fds_as_multiplexed(char *buf,
 {
 	long fds;
 	long nfds;
+	long max_nfds;
 
 	struct iovec  local;
 	struct iovec  remote;
@@ -1946,8 +1947,15 @@ static void mark_poll_fds_as_multiplexed(char *buf,
 		/* Unexpected value */
 		return;
 
+	max_nfds = sysconf (_SC_OPEN_MAX);
+	if (max_nfds >= 0 && nfds > max_nfds)
+		return;
+
 	local.iov_len = sizeof(struct pollfd) * nfds;
-	local.iov_base = xmalloc(local.iov_len);
+	local.iov_base = malloc(local.iov_len);
+	if (!local.iov_base)
+		goto out;
+
 	remote.iov_len = local.iov_len;
 	remote.iov_base = (void *)fds;
 
