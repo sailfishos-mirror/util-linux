@@ -41,12 +41,12 @@ try_option()
 	[ $? -eq 1 ] || echo "${HELPER_SYMLINK##*/} helper did not start" >> "$TS_OUTPUT"
 
 	if ! "$TS_CMD_KILL" "$@" $TEST_PID >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"; then
-		echo "kill $@ did not work" >> "$TS_OUTPUT"
+		echo "kill $* did not work" >> "$TS_OUTPUT"
 		all_ok=false
 	fi
 	wait $TEST_PID
 	if [ $? -ne 1 ]; then
-		echo "wait $TEST_PID for $@ did not work" >> "$TS_OUTPUT"
+		echo "wait $TEST_PID for $* did not work" >> "$TS_OUTPUT"
 		all_ok=false
 	fi
 }

@@ -39,7 +39,7 @@ function _dd
 	msg=$(dd "$@" 2>&1)
 	ret=$?
 	if [ $ret != 0 ]; then
-		echo "failed: dd $@" >&2
+		echo "failed: dd $*" >&2
 		echo "$msg" >&2
 	fi
 	return $ret
