@@ -31,7 +31,7 @@ CAL_TEST_TIME=1516562739  # 21st January 2018
 export CAL_TEST_TIME
 
 function call_cal {
-	local testname=$(echo "$2" | sed 's/-//g')
+	local testname="${2//-/}"
 
 	if [ "$3" == "$MYYEAR" ]; then
 		testname="${testname}-year"

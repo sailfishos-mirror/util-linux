@@ -232,7 +232,7 @@ echo
 printf "%13s: %-30s    " "kernel" "$(uname -s) $(uname -r)"
 echo
 echo
-echo "      options: $(echo $OPTS | sed 's/ / \\\n               /g')"
+echo "      options: ${OPTS// / $'\n'               }"
 echo
 
 if [ "$paraller_jobs" -ne 1 ]; then

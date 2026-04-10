@@ -39,8 +39,7 @@ function call_cal_simple {
 }
 
 function call_cal {
-	local testname=$(echo "$2" | sed 's/-//g')
-
+	local testname="${2//-/}"
 	if [ "$3" == "$MYYEAR" ]; then
 		testname="${testname}-year"
 	else
