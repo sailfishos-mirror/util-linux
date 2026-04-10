@@ -34,8 +34,7 @@ cat b >>"$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "invalid-input"
-"$TS_CMD_COPYFILERANGE" a b 3:bogus:1 bogus::2 :::: bogus svhhs:%%:8  &>/dev/null
-if [[ "$?" != "0" ]]; then
+if ! "$TS_CMD_COPYFILERANGE" a b 3:bogus:1 bogus::2 :::: bogus svhhs:%%:8 &>/dev/null; then
 	echo "ok" >"$TS_OUTPUT"
 fi
 ts_finalize_subtest

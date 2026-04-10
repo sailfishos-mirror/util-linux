@@ -27,8 +27,8 @@ grep -q 'nodev[[:space:]]*tmpfs' /proc/filesystems || \
 	ts_skip_subtest "tmpfs unsupported"
 
 mkdir -p $TS_MOUNTPOINT &>  /dev/null
-$TS_CMD_MOUNT -t tmpfs tmpfs $TS_MOUNTPOINT >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
-[ $? -eq 0 ] || ts_skip "tmpfs mount failed"
+$TS_CMD_MOUNT -t tmpfs tmpfs $TS_MOUNTPOINT >> "$TS_OUTPUT" 2>> "$TS_ERRLOG" \
+		|| ts_skip "tmpfs mount failed"
 
 # reuse the same TS_MOUNTPOINT in all subtests
 BASE=$TS_MOUNTPOINT

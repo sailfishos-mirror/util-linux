@@ -32,7 +32,7 @@ $TS_CMD_SU --whitelist-environment FOO,BAR --login --command 'echo foo:$FOO bar:
 # the environment, not the overall functionality of su(1). Therefore, if su(1)
 # fails due to authentication, the test should be skipped.
 #
-grep -q 'Authentication failure' "$TS_ERRLOG"
-[ $? -eq 0 ] && ts_skip "authentication failure"
+
+grep -q 'Authentication failure' "$TS_ERRLOG" && ts_skip "authentication failure"
 
 ts_finalize

@@ -51,6 +51,7 @@ if [ "$?" != "0" ]; then
 	grep -q "BLKDISCARD ioctl failed: Operation not supported" "$TS_ERRLOG" \
 		&& ts_skip "BLKDISCARD not supported"
 fi
+
 run_tscmd $TS_CMD_BLKDISCARD -v --offset 1 $DEVICE
 run_tscmd $TS_CMD_BLKDISCARD -v -o 511 $DEVICE
 run_tscmd $TS_CMD_BLKDISCARD -v -o 512 $DEVICE

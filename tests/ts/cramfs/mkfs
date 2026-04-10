@@ -98,8 +98,7 @@ DEVICE=$($TS_CMD_LOSETUP --show -f $IMAGE_PATH)
 ts_register_loop_device "$DEVICE"
 
 ts_log "check the image"
-ts_device_has "TYPE" "cramfs" $DEVICE
-[  "$?" == "0" ] || ts_die "Cannot find cramfs on $DEVICE"
+ts_device_has "TYPE" "cramfs" $DEVICE || ts_die "Cannot find cramfs on $DEVICE"
 
 ts_log "mount the image"
 ts_mount "cramfs" -r -L $LABEL $TS_MOUNTPOINT
