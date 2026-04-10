@@ -30,6 +30,6 @@ dd if=$INFILE of=$img bs=1 conv=notrunc seek=$(($OFFT)) &>/dev/null
 $TS_CMD_WIPEFS -a ${img} > $TS_OUTDIR/out 2>/dev/null
 
 # check for output
-[ -s $TS_OUTDIR/out ] && echo "OK" &> $TS_OUTPUT || exit 1
+[ -s $TS_OUTDIR/out ] && echo "OK" &> "$TS_OUTPUT" || exit 1
 
 ts_finalize

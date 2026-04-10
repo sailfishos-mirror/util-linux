@@ -39,7 +39,7 @@ function call_cal {
 		if [ "$USETERM" == "yes" ]; then
 			$TS_CMD_CAL "$@" 1 $x
 		fi
-		$TS_CMD_CAL "$@" 1 $x >> $TS_OUTPUT
+		$TS_CMD_CAL "$@" 1 $x >> "$TS_OUTPUT"
 	done
 	ts_finalize_subtest
 }

@@ -49,15 +49,15 @@ FILTERS["as-string"]='NUM == "100"'
 
 for name in "${!FILTERS[@]}"; do
 	ts_init_subtest "$prefix-$name"
-	echo "expr: ${FILTERS[$name]}" >> $TS_OUTPUT
-	echo >> $TS_OUTPUT
+	echo "expr: ${FILTERS[$name]}" >> "$TS_OUTPUT"
+	echo >> "$TS_OUTPUT"
 	ts_run $TESTPROG --nlines 10 --width 80 \
 		--filter "${FILTERS[$name]}" \
 		--column $TS_SELF/files/col-name \
 		--column $TS_SELF/files/col-number \
 		$TS_SELF/files/data-string \
 		$TS_SELF/files/data-number \
-	>> $TS_OUTPUT 2> /dev/null
+	>> "$TS_OUTPUT" 2> /dev/null
 	ts_finalize_subtest
 done
 FILTERS=()
@@ -96,15 +96,15 @@ FILTERS["as-string2"]='NUM == "100.5"'
 
 for name in "${!FILTERS[@]}"; do
 	ts_init_subtest "$prefix-$name"
-	echo "expr: ${FILTERS[$name]}" >> $TS_OUTPUT
-	echo >> $TS_OUTPUT
+	echo "expr: ${FILTERS[$name]}" >> "$TS_OUTPUT"
+	echo >> "$TS_OUTPUT"
 	ts_run $TESTPROG --nlines 10 --width 80 \
 		--filter "${FILTERS[$name]}" \
 		--column $TS_SELF/files/col-name \
 		--column $TS_SELF/files/col-float \
 		$TS_SELF/files/data-string \
 		$TS_SELF/files/data-float \
-	>> $TS_OUTPUT 2> /dev/null
+	>> "$TS_OUTPUT" 2> /dev/null
 	ts_finalize_subtest
 done
 FILTERS=()
@@ -135,15 +135,15 @@ FILTERS["as-string2"]='BOOL == "1"'
 
 for name in "${!FILTERS[@]}"; do
 	ts_init_subtest "$prefix-$name"
-	echo "expr: ${FILTERS[$name]}" >> $TS_OUTPUT
-	echo >> $TS_OUTPUT
+	echo "expr: ${FILTERS[$name]}" >> "$TS_OUTPUT"
+	echo >> "$TS_OUTPUT"
 	ts_run $TESTPROG --nlines 10 --width 80 \
 		--filter "${FILTERS[$name]}" \
 		--column $TS_SELF/files/col-name \
 		--column $TS_SELF/files/col-bool \
 		$TS_SELF/files/data-string \
 		$TS_SELF/files/data-bool \
-	>> $TS_OUTPUT 2> /dev/null
+	>> "$TS_OUTPUT" 2> /dev/null
 	ts_finalize_subtest
 done
 FILTERS=()
@@ -170,13 +170,13 @@ FILTERS["nreg"]='NAME !~ "aaa.*"'
 
 for name in "${!FILTERS[@]}"; do
 	ts_init_subtest "$prefix-$name"
-	echo "expr: ${FILTERS[$name]}" >> $TS_OUTPUT
-	echo >> $TS_OUTPUT
+	echo "expr: ${FILTERS[$name]}" >> "$TS_OUTPUT"
+	echo >> "$TS_OUTPUT"
 	ts_run $TESTPROG --nlines 10 --width 80 \
 		--filter "${FILTERS[$name]}" \
 		--column $TS_SELF/files/col-name \
 		$TS_SELF/files/data-string \
-	>> $TS_OUTPUT 2> /dev/null
+	>> "$TS_OUTPUT" 2> /dev/null
 	ts_finalize_subtest
 done
 FILTERS=()
@@ -199,15 +199,15 @@ FILTERS["bad-float"]='NUM == 100 . 5'
 
 for name in "${!FILTERS[@]}"; do
 	ts_init_subtest "$prefix-$name"
-	echo "expr: ${FILTERS[$name]}" >> $TS_OUTPUT
-	echo >> $TS_OUTPUT
+	echo "expr: ${FILTERS[$name]}" >> "$TS_OUTPUT"
+	echo >> "$TS_OUTPUT"
 	ts_run $TESTPROG --nlines 10 --width 80 \
 		--filter "${FILTERS[$name]}" \
 		--column $TS_SELF/files/col-number \
 		$TS_SELF/files/data-number \
-	2>> $TS_OUTPUT 1> /dev/null
+	2>> "$TS_OUTPUT" 1> /dev/null
 
-	sed -i -e 's/syntax error.*/<bison syntax error message removed>/g' $TS_OUTPUT
+	sed -i -e 's/syntax error.*/<bison syntax error message removed>/g' "$TS_OUTPUT"
 	ts_finalize_subtest
 done
 FILTERS=()

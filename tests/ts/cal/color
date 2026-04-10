@@ -32,7 +32,7 @@ function call_cal {
 	if [ "$USETERM" == "yes" ]; then
 		XDG_CONFIG_HOME="$TS_SELF" $TS_CMD_CAL --color=always "$@"
 	fi
-	XDG_CONFIG_HOME="$TS_SELF" $TS_CMD_CAL --color=always "$@" >> $TS_OUTPUT
+	XDG_CONFIG_HOME="$TS_SELF" $TS_CMD_CAL --color=always "$@" >> "$TS_OUTPUT"
 }
 
 USETERM=$( ts_has_option "useterm" "$*" )

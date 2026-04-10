@@ -37,23 +37,23 @@ EOF
 chmod +x $MOUNTER
 
 ts_init_subtest "basic"
-$TS_CMD_MOUNT -t mytest /foo /bar &> $TS_OUTPUT
+$TS_CMD_MOUNT -t mytest /foo /bar &> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "options"
-$TS_CMD_MOUNT -t mytest -o foo,defaults /foo /bar &> $TS_OUTPUT
+$TS_CMD_MOUNT -t mytest -o foo,defaults /foo /bar &> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "multi-types"
-$TS_CMD_MOUNT -t mytest,invalid /foo /bar &> $TS_OUTPUT
+$TS_CMD_MOUNT -t mytest,invalid /foo /bar &> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "user"
-$TS_CMD_MOUNT -t mytest -ouser,abc /foo /bar &> $TS_OUTPUT
+$TS_CMD_MOUNT -t mytest -ouser,abc /foo /bar &> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "username"
-$TS_CMD_MOUNT -t mytest -ouser=name,abc /foo /bar &> $TS_OUTPUT
+$TS_CMD_MOUNT -t mytest -ouser=name,abc /foo /bar &> "$TS_OUTPUT"
 ts_finalize_subtest
 
 
@@ -76,7 +76,7 @@ EOF
 	rm -f $LIBMOUNT_UTAB
 	echo -n "" > $LIBMOUNT_UTAB
 
-	$TS_CMD_MOUNT -t mytest -o x-bar=BAR /foo "$mountpoint" &> $TS_OUTPUT
+	$TS_CMD_MOUNT -t mytest -o x-bar=BAR /foo "$mountpoint" &> "$TS_OUTPUT"
 	udevadm settle
 
 	grep -q "$mountpoint" /proc/mounts
@@ -85,7 +85,7 @@ EOF
 			| grep "$mountpoint" \
 			| sed -e "s|$mountpoint|/mountpoint|g" \
 			      -e 's/ID=[[:digit:]]* //g' \
-			&> $TS_OUTPUT
+			&> "$TS_OUTPUT"
 		$TS_CMD_UMOUNT "$mountpoint"
 		unset LIBMOUNT_UTAB
 		rm -f $MOUNTER

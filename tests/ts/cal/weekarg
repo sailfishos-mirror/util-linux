@@ -36,7 +36,7 @@ function call_cal_simple {
 	if [ "$USETERM" == "yes" ]; then
 		$TS_CMD_CAL "$@"
 	fi
-	$TS_CMD_CAL "$@" >> $TS_OUTPUT
+	$TS_CMD_CAL "$@" >> "$TS_OUTPUT"
 }
 
 function call_cal {

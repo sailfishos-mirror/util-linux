@@ -38,12 +38,12 @@ echo "===recording" >"$TS_OUTPUT"
 $TS_CMD_SCRIPT \
 	--command "echo hello world; sleep 0.5; echo all done" \
 	--timing="$TIMING_FILE" \
-	"$LOG_OUT_FILE" >> $TS_OUTPUT 2>> $TS_ERRLOG
+	"$LOG_OUT_FILE" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 
 echo "===replaying" >>"$TS_OUTPUT"
-$TS_CMD_SCRIPTREPLAY "$TIMING_FILE" "$LOG_OUT_FILE" 1.5 >> $TS_OUTPUT 2>> $TS_ERRLOG
+$TS_CMD_SCRIPTREPLAY "$TIMING_FILE" "$LOG_OUT_FILE" 1.5 >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 
-sed -i "s|$TIMING_FILE|timingfile|g; s|$LOG_OUT_FILE|outlog|g" $TS_OUTPUT $TS_ERRLOG
+sed -i "s|$TIMING_FILE|timingfile|g; s|$LOG_OUT_FILE|outlog|g" "$TS_OUTPUT" "$TS_ERRLOG"
 ts_finalize_subtest
 
 
@@ -55,14 +55,14 @@ echo "===recording" >"$TS_OUTPUT"
 NUMBER=1 $TS_CMD_SCRIPT \
         --command 'echo "result is $(($NUMBER + 1))"' \
 	--log-out "$LOG_OUT_FILE" \
-	--log-timing "$TIMING_FILE"    >> $TS_OUTPUT 2>> $TS_ERRLOG
+	--log-timing "$TIMING_FILE"    >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 
 echo "===replaying" >>"$TS_OUTPUT"
 $TS_CMD_SCRIPTREPLAY \
 	--log-out "$LOG_OUT_FILE" \
-	--log-timing "$TIMING_FILE" >> $TS_OUTPUT 2>> $TS_ERRLOG
+	--log-timing "$TIMING_FILE" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 
-sed -i "s|$TIMING_FILE|timingfile|g; s|$LOG_OUT_FILE|outlog|g" $TS_OUTPUT $TS_ERRLOG
+sed -i "s|$TIMING_FILE|timingfile|g; s|$LOG_OUT_FILE|outlog|g" "$TS_OUTPUT" "$TS_ERRLOG"
 ts_finalize_subtest
 
 
@@ -74,12 +74,12 @@ echo "===recording" >"$TS_OUTPUT"
 echo 'echo "result is $(($NUMBER + 1))"' | $TS_CMD_SCRIPT \
 	--command 'sh' \
 	--log-in "$LOG_IN_FILE" \
-	--log-timing "$TIMING_FILE" >> /dev/null 2>> $TS_ERRLOG
+	--log-timing "$TIMING_FILE" >> /dev/null 2>> "$TS_ERRLOG"
 
 echo "===replaying" >>"$TS_OUTPUT"
 $TS_CMD_SCRIPTREPLAY \
 	--log-in "$LOG_IN_FILE" \
-	--log-timing "$TIMING_FILE" >> $TS_OUTPUT 2>> $TS_ERRLOG
+	--log-timing "$TIMING_FILE" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 
@@ -91,8 +91,8 @@ TS_KNOWN_FAIL="yes"
 NUMBER=123 $TS_CMD_SCRIPTLIVE \
 	--command 'sh' \
 	--log-in "$LOG_IN_FILE" \
-	--log-timing "$TIMING_FILE" >> $TS_OUTPUT 2>> $TS_ERRLOG
-sed -i 's/^[[:alnum:][:punct:][:blank:]]*[\$\#] /prompt> /g' $TS_OUTPUT
+	--log-timing "$TIMING_FILE" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
+sed -i 's/^[[:alnum:][:punct:][:blank:]]*[\$\#] /prompt> /g' "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_finalize

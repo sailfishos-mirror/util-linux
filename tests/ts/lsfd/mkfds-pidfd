@@ -45,13 +45,13 @@ RC=
     fi
     wait ${MKFDS_PID}
     RC=$?
-} > $TS_OUTPUT 2>&1
+} > "$TS_OUTPUT" 2>&1
 
 if [ "$RC" == "$TS_EXIT_NOTSUPP" ]; then
     ts_skip "pidfd_open(2) is not available"
 fi
 
 sed -i -E -e 's/UNKN|REG/[STTYPE]/' -e 's/pidfs|anon_inodefs/[SOURCE]/' \
-    $TS_OUTPUT
+    "$TS_OUTPUT"
 
 ts_finalize

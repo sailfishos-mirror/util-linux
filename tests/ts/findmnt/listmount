@@ -32,39 +32,39 @@ function check_field {
 
 
 ts_init_subtest "target"
-check_field "TARGET" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "TARGET" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "vfs-options"
-check_field "VFS-OPTIONS" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "VFS-OPTIONS" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "fs-options"
-check_field "FS-OPTIONS" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "FS-OPTIONS" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "options"
-check_field "OPTIONS" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "OPTIONS" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "fstype"
-check_field "FSTYPE" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "FSTYPE" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "propagation"
-check_field "PROPAGATION" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "PROPAGATION" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "fsroot"
-check_field "FSROOT" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "FSROOT" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "parent"
-check_field "PARENT" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "PARENT" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_init_subtest "id"
-check_field "ID" >> $TS_OUTPUT 2>> $TS_ERRLOG
+check_field "ID" >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 ts_finalize

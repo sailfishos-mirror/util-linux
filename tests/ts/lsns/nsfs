@@ -97,7 +97,7 @@ does_combination_include $NSFS_NAMES_MLINES &&
     does_combination_include ${NSFS_NAMES_1LINE//,/ }
 
 RESULT=$?
-echo $RESULT >> $TS_OUTPUT
+echo $RESULT >> "$TS_OUTPUT"
 
 if [ $RESULT -ne 0 ]; then
 	echo
