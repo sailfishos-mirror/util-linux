@@ -36,7 +36,7 @@ function do_lsmem {
 
 }
 
-for dump in $(ls $TS_SELF/dumps/*.tar.bz2 | sort); do
+for dump in $(find "$TS_SELF"/dumps/ -maxdepth 1 -name "*.tar.bz2" | sort); do
         name=$(basename $dump .tar.bz2)
         dumpdir="$TS_OUTDIR/dumps"
 

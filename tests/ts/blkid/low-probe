@@ -28,7 +28,7 @@ ts_check_prog "xz"
 
 mkdir -p $TS_OUTDIR/images-fs
 
-for img in $(ls $TS_SELF/images-fs/*.img.xz | sort); do
+for img in $(find "$TS_SELF"/images-fs/ -maxdepth 1 -name "*.img.xz" | sort); do
 	name=$(basename $img .img.xz)
 	outimg=$TS_OUTDIR/images-fs/${name}.img
 

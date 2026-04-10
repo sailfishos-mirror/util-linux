@@ -26,7 +26,7 @@ ts_check_prog "tar"
 ts_check_prog "gzip"
 ts_check_test_command "$TS_CMD_LSCPU"
 
-for dump in $(ls $TS_SELF/dumps/*.tar.gz | sort); do
+for dump in $(find "$TS_SELF"/dumps/ -maxdepth 1 -name "*.tar.gz" | sort); do
 	name=$(basename $dump .tar.gz)
 	dumpdir="$TS_OUTDIR/dumps"
 

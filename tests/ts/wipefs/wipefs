@@ -22,7 +22,7 @@ mkdir -p "$backups"
 $TS_CMD_WIPEFS --all --backup="${backups}" ${img} &>/dev/null || ts_die "wipefs failed"
 
 #there should be just one magic string/backup file in this case
-INFILE=$(ls $backups/wipefs-$(basename ${img})-*.bak)
+INFILE=$(find "$backups/" -iname "wipefs-$(basename "${img}")-*.bak")
 OFFT=$(echo $INFILE | sed 's/^.*-\(.*\).bak$/\1/')
 dd if=$INFILE of=$img bs=1 conv=notrunc seek=$(($OFFT)) &>/dev/null
 
