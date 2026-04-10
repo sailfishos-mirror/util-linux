@@ -85,7 +85,7 @@ rm -f "$outimg"
 truncate -s $(( 4096 * 10 )) "$outimg" > "$TS_ERRLOG" 2>&1
 
 rm -f "$outimg.offset"
-truncate -s $(( 4096 * 10 + $offset )) "$outimg.offset" > "$TS_ERRLOG" 2>&1
+truncate -s $(( 4096 * 10 + offset )) "$outimg.offset" > "$TS_ERRLOG" 2>&1
 
 "$TS_CMD_MKSWAP" -q -U "$UUID" -p 4096 "$outimg" \
 	>> "$TS_OUTPUT" 2>/dev/null \

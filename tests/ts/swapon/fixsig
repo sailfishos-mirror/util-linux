@@ -32,7 +32,7 @@ ts_device_has "TYPE" "swap" $DEVICE || ts_die "Cannot find swap on $DEVICE"
 #
 echo "S2SUSPEND " > "$TS_OUTPUT".signature
 dd if="$TS_OUTPUT".signature of=$DEVICE \
-	seek=$(( $PAGESIZE - 10 )) count=10 bs=1 conv=notrunc &> /dev/null
+	seek=$(( PAGESIZE - 10 )) count=10 bs=1 conv=notrunc &> /dev/null
 
 ts_device_has "TYPE" "swsuspend" $DEVICE || ts_die "Cannot find swsuspend on $DEVICE"
 

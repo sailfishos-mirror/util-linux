@@ -125,7 +125,7 @@ for api in flock fcntl ; do
 	# inmterval <3,5>.
 	#
 	ts_init_subtest "${subtest_prefix}time-check"
-	TIMEDIFF=$(( $END - $START ))
+	TIMEDIFF=$(( END - START ))
 	if [ $TIMEDIFF -lt 3 ]; then
 		ts_log "general lock failed [$TIMEDIFF sec]"
 	elif [ $TIMEDIFF -gt 5 ]; then
