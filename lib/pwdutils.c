@@ -170,7 +170,7 @@ char *xgetlogin(void)
 struct group *ul_getgrp_str(const char *str, gid_t *result)
 {
         int rc;
-        uint64_t num;
+        uint64_t num = 0;
         struct group *gr;
 
         if (result)
@@ -203,7 +203,7 @@ struct group *ul_getgrp_str(const char *str, gid_t *result)
 struct passwd *ul_getuserpw_str(const char *str, uid_t *result)
 {
         int rc;
-        uint64_t num;
+        uint64_t num = 0;
         struct passwd *pw;
 
         if (result)
