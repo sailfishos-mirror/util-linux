@@ -1942,7 +1942,8 @@ static void mark_poll_fds_as_multiplexed(char *buf,
 	if (sscanf(buf, "%lx %lx", &fds, &nfds) != 2)
 		return;
 
-	if (nfds == 0)
+	if (nfds <= 0)
+		/* Unexpected value */
 		return;
 
 	local.iov_len = sizeof(struct pollfd) * nfds;
@@ -1987,7 +1988,8 @@ static void mark_select_fds_as_multiplexed(char *buf,
 	if (sscanf(buf, "%lx %lx %lx %lx", &nfds, fds + 0, fds + 1, fds + 2) != 4)
 		return;
 
-	if (nfds == 0)
+	if (nfds <= 0)
+		/* Unexpected value */
 		return;
 
 	for (int i = 0; i < 3; i++) {
