@@ -1473,7 +1473,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['lsmem']
 endif
 
-opt = get_option('build-chmem').allowed()
+opt = get_option('build-chmem') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'chmem',
   chmem_sources,
