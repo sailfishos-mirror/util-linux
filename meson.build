@@ -1455,7 +1455,9 @@ if opt and not is_disabler(exe)
     bashcompletions += ['hexdump']
 endif
 
-opt = get_option('build-lsmem').allowed()
+opt = get_option('build-lsmem') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'lsmem',
   lsmem_sources,
