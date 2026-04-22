@@ -118,6 +118,7 @@ headers = '''
         linux/gsmmux.h
         linux/if_alg.h
         linux/landlock.h
+        linux/lp.h
         linux/kcmp.h
         linux/net_namespace.h
         linux/nsfs.h
@@ -1627,7 +1628,9 @@ if not is_disabler(exe)
   bashcompletions += ['readprofile']
 endif
 
-opt = get_option('build-tunelp').allowed()
+opt = get_option('build-tunelp') \
+      .require(conf.get('HAVE_LINUX_LP_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'tunelp',
   tunelp_sources,
