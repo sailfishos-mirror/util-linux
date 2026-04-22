@@ -80,6 +80,109 @@ conf.set_quoted('ADJTIME_PATH', '/etc/adjtime') # yes, both are used :(
 conf.set_quoted('_PATH_VENDORDIR', vendordir)
 conf.set('USE_VENDORDIR', vendordir == '' ? false : 1)
 
+headers = '''
+        byteswap.h
+        crypt.h
+        endian.h
+        err.h
+        errno.h
+        fcntl.h
+        getopt.h
+        inttypes.h
+        langinfo.h
+        lastlog.h
+        libutil.h
+        locale.h
+        mntent.h
+        paths.h
+        pty.h
+        semaphore.h
+        shadow.h
+        stdint.h
+        stdio_ext.h
+        stdlib.h
+        string.h
+        strings.h
+        unistd.h
+        utmp.h
+        utmpx.h
+        asm/io.h
+        linux/blkzoned.h
+        linux/capability.h
+        linux/cdrom.h
+        linux/compiler.h
+        linux/falloc.h
+        linux/fd.h
+        linux/fs.h
+        linux/fiemap.h
+        linux/gsmmux.h
+        linux/if_alg.h
+        linux/landlock.h
+        linux/kcmp.h
+        linux/net_namespace.h
+        linux/nsfs.h
+        linux/mount.h
+        linux/pr.h
+        linux/securebits.h
+        linux/tiocl.h
+        linux/version.h
+        linux/vm_sockets_diag.h
+        linux/watchdog.h
+        mqueue.h
+        net/if.h
+        net/if_dl.h
+        netinet/in.h
+        security/openpam.h
+        security/pam_appl.h
+        security/pam_misc.h
+        security/pam_modules.h
+        sys/auxv.h
+        sys/disk.h
+        sys/disklabel.h
+        sys/endian.h
+        sys/file.h
+        sys/io.h
+        sys/ioccom.h
+        sys/ioctl.h
+        sys/mkdev.h
+        sys/mman.h
+        sys/mount.h
+        sys/param.h
+        sys/pidfd.h
+        sys/prctl.h
+        sys/resource.h
+        sys/sendfile.h
+        sys/signalfd.h
+        sys/socket.h
+        sys/sockio.h
+        sys/stat.h
+        sys/statfs.h
+        sys/swap.h
+        sys/syscall.h
+        sys/sysmacros.h
+        sys/time.h
+        sys/timex.h
+        sys/ttydefaults.h
+        sys/types.h
+        sys/ucred.h
+        sys/un.h
+        sys/vfs.h
+        sys/xattr.h
+        ncursesw/ncurses.h
+        ncursesw/term.h
+        ncurses.h
+        term.h
+        slang.h
+        slang/slang.h
+        slcurses.h
+        slang/slcurses.h
+'''.split()
+
+foreach header : headers
+  have = cc.has_header(header)
+  conf.set('HAVE_' + header.underscorify().to_upper(), have ? 1 : false)
+endforeach
+
 build_libblkid = get_option('build-libblkid').allowed()
 conf.set('HAVE_LIBBLKID', build_libblkid ? 1 : false)
 summary('libblkid', build_libblkid ? 'enabled' : 'disabled', section : 'components')
@@ -185,96 +288,6 @@ if get_option('ncurses').enabled() and get_option('widechar').enabled()
 endif
 conf.set('HAVE_WIDECHAR', have ? 1 : false)
 
-headers = '''
-        byteswap.h
-        crypt.h
-        endian.h
-        err.h
-        errno.h
-        fcntl.h
-        getopt.h
-        inttypes.h
-        langinfo.h
-        lastlog.h
-        libutil.h
-        locale.h
-        mntent.h
-        paths.h
-        pty.h
-        semaphore.h
-        shadow.h
-        stdint.h
-        stdio_ext.h
-        stdlib.h
-        string.h
-        strings.h
-        unistd.h
-        utmp.h
-        utmpx.h
-        asm/io.h
-        linux/blkzoned.h
-        linux/capability.h
-        linux/cdrom.h
-        linux/compiler.h
-        linux/falloc.h
-        linux/fd.h
-        linux/fs.h
-        linux/fiemap.h
-        linux/gsmmux.h
-        linux/if_alg.h
-        linux/landlock.h
-        linux/kcmp.h
-        linux/net_namespace.h
-        linux/nsfs.h
-        linux/mount.h
-        linux/pr.h
-        linux/securebits.h
-        linux/tiocl.h
-        linux/version.h
-        linux/vm_sockets_diag.h
-        linux/watchdog.h
-        mqueue.h
-        net/if.h
-        net/if_dl.h
-        netinet/in.h
-        security/openpam.h
-        security/pam_appl.h
-        security/pam_misc.h
-        security/pam_modules.h
-        sys/auxv.h
-        sys/disk.h
-        sys/disklabel.h
-        sys/endian.h
-        sys/file.h
-        sys/io.h
-        sys/ioccom.h
-        sys/ioctl.h
-        sys/mkdev.h
-        sys/mman.h
-        sys/mount.h
-        sys/param.h
-        sys/pidfd.h
-        sys/prctl.h
-        sys/resource.h
-        sys/sendfile.h
-        sys/signalfd.h
-        sys/socket.h
-        sys/sockio.h
-        sys/stat.h
-        sys/statfs.h
-        sys/swap.h
-        sys/syscall.h
-        sys/sysmacros.h
-        sys/time.h
-        sys/timex.h
-        sys/ttydefaults.h
-        sys/types.h
-        sys/ucred.h
-        sys/un.h
-        sys/vfs.h
-        sys/xattr.h
-'''.split()
-
 lib_m = cc.find_library('m')
 
 lib_tinfo = dependency(
@@ -286,18 +299,12 @@ lib_ncursesw = dependency(
   'ncursesw',
   required : get_option('ncursesw'))
 if lib_ncursesw.found()
-  headers += ['ncursesw/ncurses.h',
-              'ncursesw/term.h',
-              'ncurses.h',
-              'term.h']
   lib_ncurses = disabler()
 else
   lib_ncurses = dependency(
     'curses',
     disabler : true,
     required : get_option('ncurses'))
-  headers += ['ncurses.h',
-              'term.h']
 endif
 
 conf.set('HAVE_LIBNCURSESW', lib_ncursesw.found() ? 1 : false)
@@ -306,12 +313,6 @@ conf.set('HAVE_LIBNCURSES', lib_ncurses.found() ? 1 : false)
 lib_slang = dependency(
   'slang',
   required : get_option('slang'))
-if lib_slang.found()
-  headers += ['slang.h',
-              'slang/slang.h',
-              'slcurses.h',
-              'slang/slcurses.h']
-endif
 conf.set('HAVE_SLANG', lib_slang.found() ? 1 : false)
 
 foreach curses_libs : [lib_slang, lib_ncursesw, lib_ncurses]
@@ -501,12 +502,6 @@ lib_audit = dependency(
 conf.set('HAVE_LIBAUDIT', lib_audit.found() ? 1 : false)
 
 conf.set('HAVE_SMACK', get_option('smack').allowed())
-
-
-foreach header : headers
-  have = cc.has_header(header)
-  conf.set('HAVE_' + header.underscorify().to_upper(), have ? 1 : false)
-endforeach
 
 header = 'linux/btrfs.h'
 enable_btrfs = cc.has_header(header,
