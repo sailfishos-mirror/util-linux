@@ -1403,7 +1403,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['ul']
 endif
 
-opt = get_option('build-more').allowed()
+opt = get_option('build-more') \
+      .require(conf.get('HAVE_SYS_SIGNALFD_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'more',
   more_sources,
