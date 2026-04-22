@@ -1147,7 +1147,9 @@ if opt and not is_disabler(exe)
   manadocs += nologin_manadocs
 endif
 
-opt = get_option('build-utmpdump').allowed()
+opt = get_option('build-utmpdump') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'utmpdump',
   'login-utils/utmpdump.c',
