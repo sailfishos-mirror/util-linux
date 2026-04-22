@@ -4005,6 +4005,17 @@ if not is_disabler(exe)
   exes += exe
 endif
 
+exe = executable(
+  'test_threads_create',
+  'tests/helpers/test_threads_create.c',
+  include_directories : includes,
+  dependencies : thread_libs,
+  link_with : lib_common,
+  build_by_default: program_tests)
+if not is_disabler(exe)
+  exes += exe
+endif
+
 ############################################################
 
 if conf.get('HAVE_OPENAT').to_string() == '1'
