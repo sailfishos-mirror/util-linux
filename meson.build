@@ -1219,7 +1219,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['lslogins']
 endif
 
-opt = get_option('build-vipw').allowed()
+opt = get_option('build-vipw') \
+      .require(conf.get('HAVE_SHADOW_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'vipw',
   'login-utils/vipw.c',
