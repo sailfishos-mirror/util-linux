@@ -1197,7 +1197,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['newgrp']
 endif
 
-opt = get_option('build-lslogins').allowed()
+opt = get_option('build-lslogins') \
+      .require(conf.get('HAVE_SHADOW_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'lslogins',
   'login-utils/lslogins.c',
