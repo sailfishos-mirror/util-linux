@@ -1673,8 +1673,8 @@ exe = executable(
   c_args : '-DTEST_DMESG',
   link_with : [lib_common,
                lib_tcolors],
-  build_by_default : program_tests)
-if not is_disabler(exe)
+  build_by_default : opt and program_tests)
+if opt and not is_disabler(exe)
   exes += exe
 endif
 
