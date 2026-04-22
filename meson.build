@@ -1111,7 +1111,9 @@ exe = executable(
   build_by_default : program_tests)
 exes += exe
 
-opt = get_option('build-last').allowed()
+opt = get_option('build-last') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'last',
   last_sources,
