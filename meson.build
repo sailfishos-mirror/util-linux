@@ -123,6 +123,7 @@ headers = '''
         linux/nsfs.h
         linux/mount.h
         linux/pr.h
+        linux/rfkill.h
         linux/securebits.h
         linux/tiocl.h
         linux/version.h
@@ -1552,7 +1553,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['ipcs']
 endif
 
-opt = get_option('build-rfkill').allowed()
+opt = get_option('build-rfkill') \
+      .require(conf.get('HAVE_LINUX_RFKILL_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'rfkill',
   rfkill_sources,
