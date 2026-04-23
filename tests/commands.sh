@@ -5,6 +5,7 @@ TS_TESTUSER=${TS_TESTUSER:-"nobody"}
 TS_HELPER_BOILERPLATE="${ts_helpersdir}test_boilerplate"
 TS_HELPER_BYTESWAP="${ts_helpersdir}test_byteswap"
 TS_HELPER_CANONICALIZE="${ts_helpersdir}test_canonicalize"
+TS_HELPER_CHILD_CREATE="${ts_helpersdir}test_child_create"
 TS_HELPER_COLORS="${ts_helpersdir}test_colors"
 TS_HELPER_CONFIGS="${ts_helpersdir}test_configs"
 TS_HELPER_CPUSET="${ts_helpersdir}test_cpuset"

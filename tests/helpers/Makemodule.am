@@ -63,3 +63,7 @@ endif
 
 check_PROGRAMS += test_open_twice
 test_open_twice_SOURCES = tests/helpers/test_open_twice.c
+
+check_PROGRAMS += test_child_create
+test_child_create_SOURCES = tests/helpers/test_child_create.c
+test_child_create_LDADD = $(LDADD) libcommon.la
