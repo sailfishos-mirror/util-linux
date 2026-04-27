@@ -432,3 +432,62 @@ char *ul_basename(char *path)
 
 	return p;
 }
+
+#ifdef HAVE_OPENAT
+/*
+ * fopen_at_no_link() - Open a file stream that is not a symbolic/hard link.
+ *
+ * This function wraps around openat(2), fstat(2), ftruncate(2) and fdopen(3)
+ * to create a file stream that is not a symbolic or hard link in a race-free
+ * manner.
+ *
+ * @dir:	dirfd as passed to openat(2), e.g. AT_FDCWD for the calling process
+		current working directory
+ * @filename: 	name of the target file
+ * @flags: 	open(2) file creation/status flags, O_NOFOLLOW is implicitly set
+ * @perm:	open(2) file mode, can be bitwise ORed, these are only relevant
+		when O_CREAT is set in @flags, otherwise pass as 0.
+ * @mode:	fopen(3) mode
+ *
+ * Return: On success, a valid pointer to a file stream is returned.
+ *         On failure, NULL is returned and errno is set to indicate the issue.
+ */
+FILE *fopen_at_no_link(int dir, const char *filename,
+                             int flags, mode_t perm, const char *mode)
+{
+	FILE *fp;
+	int fd;
+	struct stat st;
+
+	/* We temporarily clear the O_TRUNC bit because we do not want
+	 * to accidentally truncate the target file if it is a hard link
+	 * instead of a symbolic one, where the latter is what we are
+	 * guarding against here. The test for the hard link is done below
+	 * with fstat()...
+	 */
+	fd = openat(dir, filename, ((flags & ~O_TRUNC) | O_NOFOLLOW), perm);
+	if (fd < 0)
+		return NULL;
+
+	if (fstat(fd, &st)) {
+		close(fd);
+		return NULL;
+	}
+
+	if (st.st_nlink > 1) {
+		close(fd);
+		errno = EMLINK;
+		return NULL;
+	}
+
+	if ((flags & O_TRUNC) && ftruncate(fd, 0)) {
+		close(fd);
+		return NULL;
+	}
+
+	fp = fdopen(fd, mode);
+	if (!fp)
+		close(fd);
+	return fp;
+}
+#endif /* HAVE_OPENAT */
