@@ -3991,11 +3991,12 @@ if LINUX and lib_rt.found()
   exes += exe
 endif
 
+opt = conf.get('HAVE_FALLOCATE').to_string() == '1'
 exe = executable(
   'test_enosys',
   'tests/helpers/test_enosys.c',
   include_directories : includes,
-  build_by_default: program_tests)
+  build_by_default: opt and program_tests)
 exes += exe
 
 exe = executable(
