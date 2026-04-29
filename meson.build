@@ -146,6 +146,7 @@ headers = '''
         sys/io.h
         sys/ioccom.h
         sys/ioctl.h
+        sys/klog.h
         sys/mkdev.h
         sys/mman.h
         sys/mount.h
@@ -1661,7 +1662,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['fstrim']
 endif
 
-opt = get_option('build-dmesg').require(cc.has_header('sys/klog.h')).allowed()
+opt = get_option('build-dmesg') \
+     .require(conf.get('HAVE_SYS_KLOG_H').to_string() == '1') \
+     .allowed()
 exe = executable(
   'dmesg',
   dmesg_sources,
