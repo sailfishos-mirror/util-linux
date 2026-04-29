@@ -107,6 +107,7 @@ headers = '''
         utmp.h
         utmpx.h
         asm/io.h
+        linux/blkpg.h
         linux/blkzoned.h
         linux/capability.h
         linux/cdrom.h
@@ -2578,7 +2579,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['cfdisk']
 endif
 
-opt = get_option('build-partx').allowed()
+opt = get_option('build-partx') \
+      .require(conf.get('HAVE_LINUX_BLKPG_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'addpart',
   addpart_sources,
