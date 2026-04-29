@@ -2746,7 +2746,9 @@ if opt and not is_disabler(exe)
   manadocs += agetty_manadocs
 endif
 
-opt = get_option('build-setterm').allowed()
+opt = get_option('build-setterm') \
+      .require(conf.get('HAVE_SYS_KLOG_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'setterm',
   setterm_sources,
