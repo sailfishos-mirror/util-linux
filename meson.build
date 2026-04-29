@@ -1490,7 +1490,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['chmem']
 endif
 
-opt = get_option('build-choom').allowed()
+opt = get_option('build-choom') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'choom',
   choom_sources,
