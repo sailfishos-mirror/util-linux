@@ -1864,7 +1864,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['eject']
 endif
 
-opt = get_option('build-losetup').allowed()
+opt = get_option('build-losetup') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'losetup',
   losetup_sources,
