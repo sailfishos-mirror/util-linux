@@ -975,7 +975,7 @@ bison = find_program('bison')
 flex = find_program('flex')
 sed = find_program('sed')
 
-build_hwclock = get_option('build-hwclock').allowed()
+build_hwclock = get_option('build-hwclock').require(LINUX).allowed()
 bison_gen = generator(
   bison,
   output : ['@BASENAME@.tab.c', '@BASENAME@.tab.h'],
