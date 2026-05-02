@@ -25,6 +25,11 @@ ts_check_test_command "$TS_CMD_HEXDUMP"
 ts_check_test_command "$TS_CMD_FINDMNT"
 ts_check_prog "stat"
 
+fstype="$("$TS_CMD_FINDMNT" -o FSTYPE --noheadings --target "$TS_OUTDIR")"
+if [[ ! "$fstype" =~ (xfs|ext4) ]]; then
+    ts_skip "unsupported file system type $fstype"
+fi
+
 TEST_FILE="${TS_OUTDIR}/${TS_TESTNAME}.data"
 # We have to properly align the different data blocks
 # to the logical filesystem block size otherwise fallocate
