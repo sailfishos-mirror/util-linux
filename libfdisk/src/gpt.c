@@ -1818,11 +1818,13 @@ static int gpt_entry_attrs_from_string(
 
 	while (p && *p) {
 		int bit = -1;
+		const char *item;
 
 		while (isblank(*p)) p++;
 		if (!*p)
 			break;
 
+		item = p;
 		DBG(GPT, ul_debug(" item '%s'", p));
 
 		if (strncmp(p, GPT_ATTRSTR_REQ,
@@ -1842,27 +1844,35 @@ static int gpt_entry_attrs_from_string(
 			bit = GPT_ATTRBIT_NOBLOCK;
 			p += sizeof(GPT_ATTRSTR_NOBLOCK) - 1;
 
-		/* GUID:<bit> as well as <bit> */
+		/* GUID:<bit> as well as <bit>. Bare numeric input accepts
+		 * the named-flag bits (0..2) and the GUID-specific range
+		 * (48..63). The GUID: prefix is the documented namespace
+		 * for 48..63 only. Bits 3..47 are reserved by UEFI. */
 		} else if (isdigit((unsigned char) *p)
 			   || (strncmp(p, "GUID:", 5) == 0
 			       && isdigit((unsigned char) *(p + 5)))) {
 			char *end = NULL;
+			int is_guid = (*p == 'G');
 
-			if (*p == 'G')
+			if (is_guid)
 				p += 5;
 
 			errno = 0;
 			bit = strtol(p, &end, 0);
-			if (errno || !end || end == str
-			    || bit < GPT_ATTRBIT_GUID_FIRST
-			    || bit >= GPT_ATTRBIT_GUID_FIRST + GPT_ATTRBIT_GUID_COUNT)
+			if (errno || !end || end == p)
 				bit = -1;
-			else
+			else if (bit >= GPT_ATTRBIT_GUID_FIRST
+				 && bit < GPT_ATTRBIT_GUID_FIRST + GPT_ATTRBIT_GUID_COUNT)
 				p = end;
+			else if (!is_guid && bit >= GPT_ATTRBIT_REQ
+				 && bit <= GPT_ATTRBIT_LEGACY)
+				p = end;
+			else
+				bit = -1;
 		}
 
 		if (bit < 0) {
-			fdisk_warnx(cxt, _("unsupported GPT attribute bit '%s'"), p);
+			fdisk_warnx(cxt, _("unsupported GPT attribute bit '%s'"), item);
 			return -EINVAL;
 		}
 
