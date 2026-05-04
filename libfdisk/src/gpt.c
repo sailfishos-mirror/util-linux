@@ -1878,8 +1878,7 @@ static int gpt_entry_attrs_from_string(
 					 && val < GPT_ATTRBIT_GUID_FIRST + GPT_ATTRBIT_GUID_COUNT) {
 					bit = val;
 					p = num_end;
-				} else if (!is_guid && val >= GPT_ATTRBIT_REQ
-					   && val <= GPT_ATTRBIT_LEGACY) {
+				} else if (!is_guid && val <= GPT_ATTRBIT_LEGACY) {
 					bit = val;
 					p = num_end;
 				} else
