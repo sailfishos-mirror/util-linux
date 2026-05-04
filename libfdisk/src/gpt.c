@@ -1851,24 +1851,40 @@ static int gpt_entry_attrs_from_string(
 		} else if (isdigit((unsigned char) *p)
 			   || (strncmp(p, "GUID:", 5) == 0
 			       && isdigit((unsigned char) *(p + 5)))) {
-			char *end = NULL;
+			const char *num_start, *num_end;
+			char buf[32];
+			size_t len;
+			uint16_t val;
 			int is_guid = (*p == 'G');
 
 			if (is_guid)
 				p += 5;
 
-			errno = 0;
-			bit = strtol(p, &end, 0);
-			if (errno || !end || end == p)
+			num_start = p;
+			num_end = p;
+			while (*num_end && *num_end != ',' && !isblank(*num_end))
+				num_end++;
+			len = num_end - num_start;
+
+			if (len == 0 || len >= sizeof(buf)) {
 				bit = -1;
-			else if (bit >= GPT_ATTRBIT_GUID_FIRST
-				 && bit < GPT_ATTRBIT_GUID_FIRST + GPT_ATTRBIT_GUID_COUNT)
-				p = end;
-			else if (!is_guid && bit >= GPT_ATTRBIT_REQ
-				 && bit <= GPT_ATTRBIT_LEGACY)
-				p = end;
-			else
-				bit = -1;
+			} else {
+				memcpy(buf, num_start, len);
+				buf[len] = '\0';
+
+				if (ul_strtou16(buf, &val, 0) != 0)
+					bit = -1;
+				else if (val >= GPT_ATTRBIT_GUID_FIRST
+					 && val < GPT_ATTRBIT_GUID_FIRST + GPT_ATTRBIT_GUID_COUNT) {
+					bit = val;
+					p = num_end;
+				} else if (!is_guid && val >= GPT_ATTRBIT_REQ
+					   && val <= GPT_ATTRBIT_LEGACY) {
+					bit = val;
+					p = num_end;
+				} else
+					bit = -1;
+			}
 		}
 
 		if (bit < 0) {

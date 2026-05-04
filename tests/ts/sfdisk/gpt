@@ -132,6 +132,7 @@ ts_finalize_subtest
 
 ts_init_subtest "attrs-numeric-named"
 $TS_CMD_SFDISK --part-attrs ${TS_DEVICE} 2 "0,1,2" >> $TS_OUTPUT 2>> $TS_ERRLOG
+udevadm settle
 $TS_CMD_SFDISK --part-attrs ${TS_DEVICE} 2 >> $TS_OUTPUT 2>> $TS_ERRLOG
 ts_fdisk_clean $TS_DEVICE
 udevadm settle
@@ -140,6 +141,7 @@ ts_finalize_subtest
 
 ts_init_subtest "attrs-numeric-mixed"
 $TS_CMD_SFDISK --part-attrs ${TS_DEVICE} 2 "2,GUID:60" >> $TS_OUTPUT 2>> $TS_ERRLOG
+udevadm settle
 $TS_CMD_SFDISK --part-attrs ${TS_DEVICE} 2 >> $TS_OUTPUT 2>> $TS_ERRLOG
 ts_fdisk_clean $TS_DEVICE
 udevadm settle
@@ -148,6 +150,7 @@ ts_finalize_subtest
 
 ts_init_subtest "attrs-numeric-hex"
 $TS_CMD_SFDISK --part-attrs ${TS_DEVICE} 2 "0x2" >> $TS_OUTPUT 2>> $TS_ERRLOG
+udevadm settle
 $TS_CMD_SFDISK --part-attrs ${TS_DEVICE} 2 >> $TS_OUTPUT 2>> $TS_ERRLOG
 ts_fdisk_clean $TS_DEVICE
 udevadm settle
