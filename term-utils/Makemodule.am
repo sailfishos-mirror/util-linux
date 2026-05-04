@@ -7,7 +7,7 @@ script_SOURCES = term-utils/script.c \
 		 include/pty-session.h \
 		 lib/monotonic.c
 script_CFLAGS = $(AM_CFLAGS) -Wno-format-y2k
-script_LDADD = $(LDADD) libcommon.la $(ISNAN_LIBS) $(REALTIME_LIBS) -lutil
+script_LDADD = $(LDADD) libcommon.la libcommon_shells.la $(ISNAN_LIBS) $(REALTIME_LIBS) -lutil
 if HAVE_UTEMPTER
 script_LDADD += -lutempter
 endif
@@ -38,7 +38,7 @@ scriptlive_SOURCES = term-utils/scriptlive.c \
 		       lib/pty-session.c \
 		       include/pty-session.h \
 		       lib/monotonic.c
-scriptlive_LDADD = $(LDADD) libcommon.la $(ISNAN_LIBS) $(REALTIME_LIBS) -lutil
+scriptlive_LDADD = $(LDADD) libcommon.la libcommon_shells.la $(ISNAN_LIBS) $(REALTIME_LIBS) -lutil
 endif # BUILD_SCRIPTLIVE
 
 
@@ -46,20 +46,16 @@ if BUILD_AGETTY
 sbin_PROGRAMS += agetty
 MANPAGES += term-utils/agetty.8
 dist_noinst_DATA += term-utils/agetty.8.adoc
-agetty_SOURCES = term-utils/agetty.c \
-		 lib/logindefs.c
+agetty_SOURCES = term-utils/agetty.c
 if USE_PLYMOUTH_SUPPORT
 agetty_SOURCES += lib/plymouth-ctrl.c
 endif
 if LINUX
 agetty_SOURCES += lib/netlink.c lib/netaddrq.c
 endif
-agetty_LDADD = $(LDADD) libcommon.la
+agetty_LDADD = $(LDADD) libcommon.la libcommon_logindefs.la
 if BSD
 agetty_LDADD += -lutil
-endif
-if HAVE_ECONF
-agetty_LDADD += $(ECONF_LIBS)
 endif
 if HAVE_SYSTEMD
 agetty_LDADD += $(SYSTEMD_LIBS)
