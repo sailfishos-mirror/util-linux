@@ -35,12 +35,11 @@ function call_cal_simple {
 	if [ "$USETERM" == "yes" ]; then
 		$TS_HELPER_CAL "$@"
 	fi
-	$TS_HELPER_CAL "$@" >> $TS_OUTPUT
+	$TS_HELPER_CAL "$@" >> "$TS_OUTPUT"
 }
 
 function call_cal {
-	local testname=$(echo "$2" | sed 's/-//g')
-
+	local testname="${2//-/}"
 	if [ "$3" == "$MYYEAR" ]; then
 		testname="${testname}-year"
 	else

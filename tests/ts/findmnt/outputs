@@ -22,34 +22,34 @@ ts_check_test_command "$TS_CMD_FINDMNT"
 
 
 ts_init_subtest "default"
-$TS_CMD_FINDMNT --tab-file "$TS_SELF/files/mountinfo" &> $TS_OUTPUT
-echo rc=$? >> $TS_OUTPUT
+$TS_CMD_FINDMNT --tab-file "$TS_SELF/files/mountinfo" &> "$TS_OUTPUT"
+echo rc=$? >> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "kernel"
-$TS_CMD_FINDMNT --kernel --tab-file "$TS_SELF/files/mountinfo" &> $TS_OUTPUT
-echo rc=$? >> $TS_OUTPUT
+$TS_CMD_FINDMNT --kernel --tab-file "$TS_SELF/files/mountinfo" &> "$TS_OUTPUT"
+echo rc=$? >> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "force-tree"
-$TS_CMD_FINDMNT --tree --kernel --tab-file "$TS_SELF/files/mountinfo" &> $TS_OUTPUT
-echo rc=$? >> $TS_OUTPUT
+$TS_CMD_FINDMNT --tree --kernel --tab-file "$TS_SELF/files/mountinfo" &> "$TS_OUTPUT"
+echo rc=$? >> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "submounts"
-$TS_CMD_FINDMNT /sys --submounts --kernel --tab-file "$TS_SELF/files/mountinfo" &> $TS_OUTPUT
-echo rc=$? >> $TS_OUTPUT
+$TS_CMD_FINDMNT /sys --submounts --kernel --tab-file "$TS_SELF/files/mountinfo" &> "$TS_OUTPUT"
+echo rc=$? >> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "messy-mountinfo"
-$TS_CMD_FINDMNT --tab-file "$TS_SELF/files/mountinfo-messy" &> $TS_OUTPUT
-echo rc=$? >> $TS_OUTPUT
+$TS_CMD_FINDMNT --tab-file "$TS_SELF/files/mountinfo-messy" &> "$TS_OUTPUT"
+echo rc=$? >> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_init_subtest "empty-file"
 touch "$TS_OUTDIR/empty"
-$TS_CMD_FINDMNT --tab-file "$TS_OUTDIR/empty" &> $TS_OUTPUT
-echo rc=$? >> $TS_OUTPUT
+$TS_CMD_FINDMNT --tab-file "$TS_OUTDIR/empty" &> "$TS_OUTPUT"
+echo rc=$? >> "$TS_OUTPUT"
 ts_finalize_subtest
 
 ts_finalize

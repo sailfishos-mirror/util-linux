@@ -36,12 +36,11 @@ function call_cal_simple {
 	if [ "$USETERM" == "yes" ]; then
 		$TS_CMD_CAL "$@"
 	fi
-	$TS_CMD_CAL "$@" >> $TS_OUTPUT
+	$TS_CMD_CAL "$@" >> "$TS_OUTPUT"
 }
 
 function call_cal {
-	local testname=$(echo "${2}" | sed 's/-//g')
-	testname="${testname}-$(echo "${3}" | sed 's/=//g;s/-//g')"
+	local testname="${2//-/}-${3//[-=]/}"
 
 	ts_init_subtest "$testname"
 	call_cal_simple "$@"
@@ -49,8 +48,7 @@ function call_cal {
 }
 
 function call_cal_color {
-	local testname=$(echo "${2}" | sed 's/-//g')
-	testname="${testname}-$(echo "${3}" | sed 's/=//g;s/-//g')-color"
+	local testname="${2//-/}-${3//[-=]/}-color"
 
 	ts_init_subtest "$testname"
 	call_cal_simple "$@" --color=always

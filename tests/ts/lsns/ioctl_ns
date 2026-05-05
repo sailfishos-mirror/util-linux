@@ -99,7 +99,7 @@ init
 	cleanup
     fi
     exit $RESULT
-) >> $TS_ERRLOG 2>&1 &
+) >> "$TS_ERRLOG" 2>&1 &
 mainpid=$!
 (
     exec 4< $FIFO_WAIT
@@ -116,7 +116,7 @@ wait $subpid
 wait $mainpid
 
 RESULT=$?
-echo $RESULT >> $TS_OUTPUT
+echo $RESULT >> "$TS_OUTPUT"
 
 cleanup
 ts_finalize

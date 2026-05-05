@@ -119,7 +119,7 @@ cdev_tun_test()
 		echo "output TUN.IFACE: $output"
 	    fi
 	fi
-    } > $TS_OUTPUT 2>&1
+    } > "$TS_OUTPUT" 2>&1
     ts_finalize_subtest
 
     ts_init_subtest "$tname"-devnetns
@@ -135,14 +135,14 @@ cdev_tun_test()
 		echo "expected TUN.DEVNETNS: $netns"
 		echo "output TUN.DEVNETNS: $output"
 	    fi
-	} > $TS_OUTPUT 2>&1
+	} > "$TS_OUTPUT" 2>&1
     fi
     ts_finalize_subtest
 
     ts_init_subtest "$tname"-socknetns
     if [[ -n "$IFNAME" ]]; then
 	cdev_tun_test_socknetns \
-	    "$IFNAME" "${PID}" "${EXPR}" "$netns" > $TS_OUTPUT 2>&1
+	    "$IFNAME" "${PID}" "${EXPR}" "$netns" > "$TS_OUTPUT" 2>&1
     fi
     ts_finalize_subtest
 

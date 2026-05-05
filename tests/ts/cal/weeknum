@@ -30,7 +30,7 @@ USETERM=$( ts_has_option "useterm" "$*" )
 [ "$USETERM" == "yes" ] && TS_VERBOSE="yes"
 
 function call_cal {
-	local testname=$(echo "$2" | sed 's/-//g')
+	local testname="${2//-/}"
 
 	ts_init_subtest "$testname"
 	ts_log "$1"
@@ -39,7 +39,7 @@ function call_cal {
 		if [ "$USETERM" == "yes" ]; then
 			$TS_CMD_CAL "$@" 1 $x
 		fi
-		$TS_CMD_CAL "$@" 1 $x >> $TS_OUTPUT
+		$TS_CMD_CAL "$@" 1 $x >> "$TS_OUTPUT"
 	done
 	ts_finalize_subtest
 }

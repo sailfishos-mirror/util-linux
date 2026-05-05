@@ -29,13 +29,13 @@ IMAGE=${TS_OUTDIR}/${TS_TESTNAME}.file
 ts_init_subtest "alloc"
 rm -f $IMAGE
 
-if $TS_CMD_FALLOCATE --offset 128 --length 256 $IMAGE >> $TS_OUTPUT 2>> $TS_ERRLOG; then
-	stat -c "%s" $IMAGE >> $TS_OUTPUT 2>> $TS_ERRLOG
+if $TS_CMD_FALLOCATE --offset 128 --length 256 $IMAGE >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"; then
+	stat -c "%s" $IMAGE >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 else
 	# fs type of $TS_OUTDIR, could be used to skip this test early
 	fs_type=$(${TS_CMD_FINDMNT} --noheadings --output FSTYPE --target ${TS_OUTDIR})
 
-	grep -qi "fallocate: fallocate failed:.*not supported" $TS_ERRLOG \
+	grep -qi "fallocate: fallocate failed:.*not supported" "$TS_ERRLOG" \
 		&& ts_skip "'${fs_type}' not supported"
 fi
 
@@ -56,21 +56,21 @@ rm -f $IMAGE
 # Report holes - initial state with data holes
 #
 ts_init_subtest "report-data-holes"
-$TS_CMD_FALLOCATE --report-holes $IMAGE >> $TS_OUTPUT 2>> $TS_ERRLOG
+$TS_CMD_FALLOCATE --report-holes $IMAGE >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 #
 # Dig holes with verbose
 #
 ts_init_subtest "dig-holes"
-$TS_CMD_FALLOCATE --dig-holes --verbose $IMAGE 2>> $TS_ERRLOG | sed "s|$IMAGE|<testfile>|g" >> $TS_OUTPUT
+$TS_CMD_FALLOCATE --dig-holes --verbose $IMAGE 2>> "$TS_ERRLOG" | sed "s|$IMAGE|<testfile>|g" >> "$TS_OUTPUT"
 ts_finalize_subtest
 
 #
 # Report holes after digging - should show file holes
 #
 ts_init_subtest "report-file-holes"
-$TS_CMD_FALLOCATE --report-holes $IMAGE >> $TS_OUTPUT 2>> $TS_ERRLOG
+$TS_CMD_FALLOCATE --report-holes $IMAGE >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 ts_finalize_subtest
 
 rm -f $IMAGE

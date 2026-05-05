@@ -67,9 +67,9 @@ if [ -z "$LODEVR" ]; then
 fi
 udevadm settle
 if test "$LODEV" = "$LODEVR" ; then
-	echo "equal" >>$TS_OUTPUT
+	echo "equal" >>"$TS_OUTPUT"
 else
-	echo "different" >>$TS_OUTPUT
+	echo "different" >>"$TS_OUTPUT"
 	if test -n "$LODEVR" ; then
 		$TS_CMD_LOSETUP -d "$LODEVR"
 	fi
@@ -91,9 +91,9 @@ if [ -z "$LODEVR" ]; then
 fi
 udevadm settle
 if test "$LODEV" = "$LODEVR" ; then
-	echo "equal" >>$TS_OUTPUT
+	echo "equal" >>"$TS_OUTPUT"
 else
-	echo "different" >>$TS_OUTPUT
+	echo "different" >>"$TS_OUTPUT"
 	if test -n "$LODEVR" ; then
 		$TS_CMD_LOSETUP -d "$LODEVR"
 	fi
@@ -115,9 +115,9 @@ if [ -z "$LODEVR" ]; then
 fi
 udevadm settle
 if test "$LODEV" = "$LODEVR" ; then
-	echo "equal" >>$TS_OUTPUT
+	echo "equal" >>"$TS_OUTPUT"
 else
-	echo "different" >>$TS_OUTPUT
+	echo "different" >>"$TS_OUTPUT"
 	if test -n "$LODEVR" ; then
 		$TS_CMD_LOSETUP -d "$LODEVR"
 	fi
@@ -139,9 +139,9 @@ if [ -z "$LODEVR" ]; then
 fi
 udevadm settle
 if test "$LODEV" = "$LODEVR" ; then
-	echo "equal" >>$TS_OUTPUT
+	echo "equal" >>"$TS_OUTPUT"
 else
-	echo "different" >>$TS_OUTPUT
+	echo "different" >>"$TS_OUTPUT"
 	if test -n "$LODEVR" ; then
 		$TS_CMD_LOSETUP -d "$LODEVR"
 	fi
@@ -163,9 +163,9 @@ if [ -z "$LODEVR" ]; then
 fi
 udevadm settle
 if test "$LODEV" = "$LODEVR" ; then
-	echo "equal" >>$TS_OUTPUT
+	echo "equal" >>"$TS_OUTPUT"
 else
-	echo "different" >>$TS_OUTPUT
+	echo "different" >>"$TS_OUTPUT"
 	if test -n "$LODEVR" ; then
 		$TS_CMD_LOSETUP -d "$LODEVR"
 	fi
@@ -188,9 +188,9 @@ if [ -z "$LODEVR" ]; then
 fi
 udevadm settle
 if test "$LODEV" = "$LODEVR" ; then
-	echo "equal" >>$TS_OUTPUT
+	echo "equal" >>"$TS_OUTPUT"
 else
-	echo "different" >>$TS_OUTPUT
+	echo "different" >>"$TS_OUTPUT"
 	if test -n "$LODEVR" ; then
 		$TS_CMD_LOSETUP -d "$LODEVR"
 	fi

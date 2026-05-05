@@ -30,7 +30,7 @@ function do_lock {
 
 	$TS_CMD_FLOCK $1 $TS_OUTDIR/lockfile \
 		echo "$mesg" \
-		>> $TS_OUTPUT 2>> $TS_ERRLOG
+		>> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 
 	local rc="$?"
 
@@ -95,7 +95,7 @@ for api in flock fcntl ; do
 	rm 4 2> /dev/null
 	exec 4<>$TS_OUTDIR/lockfile || ts_log "Could not open lockfile"
 	$TS_CMD_FLOCK $api_arg --nonblock --exclusive --conflict-exit-code 123 4 \
-		      >> $TS_OUTPUT 2>> $TS_ERRLOG
+		      >> "$TS_OUTPUT" 2>> "$TS_ERRLOG"
 
 	rc="$?"
 
@@ -125,7 +125,7 @@ for api in flock fcntl ; do
 	# inmterval <3,5>.
 	#
 	ts_init_subtest "${subtest_prefix}time-check"
-	TIMEDIFF=$(( $END - $START ))
+	TIMEDIFF=$(( END - START ))
 	if [ $TIMEDIFF -lt 3 ]; then
 		ts_log "general lock failed [$TIMEDIFF sec]"
 	elif [ $TIMEDIFF -gt 5 ]; then
