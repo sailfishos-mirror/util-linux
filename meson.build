@@ -107,6 +107,7 @@ headers = '''
         utmp.h
         utmpx.h
         asm/io.h
+        linux/blkpg.h
         linux/blkzoned.h
         linux/capability.h
         linux/cdrom.h
@@ -146,6 +147,7 @@ headers = '''
         sys/io.h
         sys/ioccom.h
         sys/ioctl.h
+        sys/klog.h
         sys/mkdev.h
         sys/mman.h
         sys/mount.h
@@ -973,7 +975,7 @@ bison = find_program('bison')
 flex = find_program('flex')
 sed = find_program('sed')
 
-build_hwclock = get_option('build-hwclock').allowed()
+build_hwclock = get_option('build-hwclock').require(LINUX).allowed()
 bison_gen = generator(
   bison,
   output : ['@BASENAME@.tab.c', '@BASENAME@.tab.h'],
@@ -1109,7 +1111,9 @@ exe = executable(
   build_by_default : program_tests)
 exes += exe
 
-opt = get_option('build-last').allowed()
+opt = get_option('build-last') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'last',
   last_sources,
@@ -1143,7 +1147,9 @@ if opt and not is_disabler(exe)
   manadocs += nologin_manadocs
 endif
 
-opt = get_option('build-utmpdump').allowed()
+opt = get_option('build-utmpdump') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'utmpdump',
   'login-utils/utmpdump.c',
@@ -1449,7 +1455,9 @@ if opt and not is_disabler(exe)
     bashcompletions += ['hexdump']
 endif
 
-opt = get_option('build-lsmem').allowed()
+opt = get_option('build-lsmem') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'lsmem',
   lsmem_sources,
@@ -1465,7 +1473,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['lsmem']
 endif
 
-opt = get_option('build-chmem').allowed()
+opt = get_option('build-chmem') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'chmem',
   chmem_sources,
@@ -1480,7 +1490,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['chmem']
 endif
 
-opt = get_option('build-choom').allowed()
+opt = get_option('build-choom') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'choom',
   choom_sources,
@@ -1661,7 +1673,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['fstrim']
 endif
 
-opt = get_option('build-dmesg').require(cc.has_header('sys/klog.h')).allowed()
+opt = get_option('build-dmesg') \
+     .require(conf.get('HAVE_SYS_KLOG_H').to_string() == '1') \
+     .allowed()
 exe = executable(
   'dmesg',
   dmesg_sources,
@@ -1852,7 +1866,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['eject']
 endif
 
-opt = get_option('build-losetup').allowed()
+opt = get_option('build-losetup') \
+      .require(LINUX) \
+      .allowed()
 exe = executable(
   'losetup',
   losetup_sources,
@@ -2575,7 +2591,9 @@ if opt and not is_disabler(exe)
   bashcompletions += ['cfdisk']
 endif
 
-opt = get_option('build-partx').allowed()
+opt = get_option('build-partx') \
+      .require(conf.get('HAVE_LINUX_BLKPG_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'addpart',
   addpart_sources,
@@ -2743,7 +2761,9 @@ if opt and not is_disabler(exe)
   manadocs += agetty_manadocs
 endif
 
-opt = get_option('build-setterm').allowed()
+opt = get_option('build-setterm') \
+      .require(conf.get('HAVE_SYS_KLOG_H').to_string() == '1') \
+      .allowed()
 exe = executable(
   'setterm',
   setterm_sources,
@@ -3991,11 +4011,12 @@ if LINUX and lib_rt.found()
   exes += exe
 endif
 
+opt = conf.get('HAVE_FALLOCATE').to_string() == '1'
 exe = executable(
   'test_enosys',
   'tests/helpers/test_enosys.c',
   include_directories : includes,
-  build_by_default: program_tests)
+  build_by_default: opt and program_tests)
 exes += exe
 
 exe = executable(
