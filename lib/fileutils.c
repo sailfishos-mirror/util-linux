@@ -442,11 +442,11 @@ char *ul_basename(char *path)
  * manner.
  *
  * @dir:	dirfd as passed to openat(2), e.g. AT_FDCWD for the calling process
-		current working directory
- * @filename: 	name of the target file
- * @flags: 	open(2) file creation/status flags, O_NOFOLLOW is implicitly set
+ *		current working directory
+ * @filename:	name of the target file
+ * @flags:	open(2) file creation/status flags, O_NOFOLLOW is implicitly set
  * @perm:	open(2) file mode, can be bitwise ORed, these are only relevant
-		when O_CREAT is set in @flags, otherwise pass as 0.
+ *		when O_CREAT is set in @flags, otherwise pass as 0.
  * @mode:	fopen(3) mode
  *
  * Return: On success, a valid pointer to a file stream is returned.
