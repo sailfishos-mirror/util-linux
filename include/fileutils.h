@@ -48,7 +48,10 @@ static inline FILE *fopen_at(int dir, const char *filename,
 		close(fd);
 	return ret;
 }
-#endif
+
+extern FILE *fopen_at_no_link(int dir, const char *filename,
+                             int flags, mode_t perm, const char *mode);
+#endif /* HAVE_OPENAT */
 
 static inline int is_same_inode(const int fd, const struct stat *st)
 {

@@ -71,6 +71,7 @@
 #include "pty-session.h"
 #include "debug.h"
 #include "shells.h"
+#include "fileutils.h"
 
 static UL_DEBUG_DEFINE_MASK(script);
 UL_DEBUG_DEFINE_MASKNAMES(script) = UL_DEBUG_EMPTY_MASKNAMES;
@@ -111,6 +112,7 @@ struct script_log {
 	char	*filename;		/* on command line specified name */
 	struct timeval oldtime;		/* previous entry log time (SCRIPT_FMT_TIMING_* only) */
 	struct timeval starttime;
+	int 	flags;			/* open(2) flags for the log file */
 
 	unsigned int	initialized : 1;
 };
@@ -243,7 +245,7 @@ static struct script_log *get_log_by_name(struct script_stream *stream,
 
 static struct script_log *log_associate(struct script_control *ctl,
 					struct script_stream *stream,
-					const char *filename, int format)
+					const char *filename, int flags, int format)
 {
 	struct script_log *log;
 
@@ -263,6 +265,7 @@ static struct script_log *log_associate(struct script_control *ctl,
 		log = xcalloc(1, sizeof(*log));
 		log->filename = xstrdup(filename);
 		log->format = format;
+		log->flags = flags;
 	}
 
 	/* add log to the stream */
@@ -280,6 +283,43 @@ static struct script_log *log_associate(struct script_control *ctl,
 	}
 
 	return log;
+}
+
+static int log_open(struct script_control *ctl, struct script_log *log)
+{
+	int flags;
+	mode_t perm;
+	const char *mode;
+
+	DBG(MISC, ul_debug("opening %s", log->filename));
+
+	assert(log->fp == NULL);
+
+	mode = ctl->append && log->format == SCRIPT_FMT_RAW ?
+			"a" UL_CLOEXECSTR :
+			"w" UL_CLOEXECSTR;
+
+	errno = 0;
+	if (log->flags & O_NOFOLLOW) {
+		flags = O_CREAT|O_WRONLY|O_CLOEXEC;
+		flags |= ctl->append && log->format == SCRIPT_FMT_RAW ? O_APPEND : O_TRUNC;
+		perm = S_IRUSR|S_IWUSR|S_IRGRP|S_IWGRP|S_IROTH|S_IWOTH;
+
+		log->fp = fopen_at_no_link(AT_FDCWD, log->filename, flags, perm, mode);
+	} else {
+		log->fp = fopen(log->filename, mode);
+	}
+
+	if (!log->fp) {
+		if (errno == ELOOP || errno == EMLINK)
+			warnx(_("output file `%s' is a link\n"
+				"Use --force if you really want to use it.\n"
+				"Program not started."), log->filename);
+		else
+			warn(_("cannot open %s"), log->filename);
+		return -errno;
+	}
+	return 0;
 }
 
 static int log_close(struct script_control *ctl,
@@ -376,22 +416,13 @@ static void log_free(struct script_control *ctl, struct script_log *log)
 static int log_start(struct script_control *ctl,
 		      struct script_log *log)
 {
+	int rc;
 	if (log->initialized)
 		return 0;
 
-	DBG(MISC, ul_debug("opening %s", log->filename));
-
-	assert(log->fp == NULL);
-
-	/* open the log */
-	log->fp = fopen(log->filename,
-			ctl->append && log->format == SCRIPT_FMT_RAW ?
-			"a" UL_CLOEXECSTR :
-			"w" UL_CLOEXECSTR);
-	if (!log->fp) {
-		warn(_("cannot open %s"), log->filename);
-		return -errno;
-	}
+	rc = log_open(ctl, log);
+	if (rc)
+		return rc;
 
 	/* write header, etc. */
 	switch (log->format) {
@@ -747,19 +778,6 @@ static int callback_flush_logs(void *data)
 	return 0;
 }
 
-static void die_if_link(struct script_control *ctl, const char *filename)
-{
-	struct stat s;
-
-	if (ctl->force)
-		return;
-	if (lstat(filename, &s) == 0 && (S_ISLNK(s.st_mode) || s.st_nlink > 1))
-		errx(EXIT_FAILURE,
-		     _("output file `%s' is a link\n"
-		       "Use --force if you really want to use it.\n"
-		       "Program not started."), filename);
-}
-
 int main(int argc, char **argv)
 {
 	struct script_control ctl = {
@@ -866,16 +884,16 @@ int main(int argc, char **argv)
 			ctl.force = 1;
 			break;
 		case 'B':
-			log_associate(&ctl, &ctl.in, optarg, SCRIPT_FMT_RAW);
-			log_associate(&ctl, &ctl.out, optarg, SCRIPT_FMT_RAW);
+			log_associate(&ctl, &ctl.in, optarg, 0, SCRIPT_FMT_RAW);
+			log_associate(&ctl, &ctl.out, optarg, 0, SCRIPT_FMT_RAW);
 			infile = outfile = optarg;
 			break;
 		case 'I':
-			log_associate(&ctl, &ctl.in, optarg, SCRIPT_FMT_RAW);
+			log_associate(&ctl, &ctl.in, optarg, 0, SCRIPT_FMT_RAW);
 			infile = optarg;
 			break;
 		case 'O':
-			log_associate(&ctl, &ctl.out, optarg, SCRIPT_FMT_RAW);
+			log_associate(&ctl, &ctl.out, optarg, 0, SCRIPT_FMT_RAW);
 			outfile = optarg;
 			break;
 		case 'o':
@@ -926,17 +944,17 @@ int main(int argc, char **argv)
 
 	/* default if no --log-* specified */
 	if (!outfile && !infile) {
+		int flags = 0;
 		if (argc > 0) {
 			outfile = argv[0];
 			argc--;
 			argv++;
 		} else {
-			die_if_link(&ctl, DEFAULT_TYPESCRIPT_FILENAME);
+			if (!ctl.force)
+				flags |= O_NOFOLLOW;
 			outfile = DEFAULT_TYPESCRIPT_FILENAME;
 		}
-
-		/* associate stdout with typescript file */
-		log_associate(&ctl, &ctl.out, outfile, SCRIPT_FMT_RAW);
+		log_associate(&ctl, &ctl.out, outfile, flags, SCRIPT_FMT_RAW);
 	}
 
 	/* concat arguments after "--" as command */
@@ -972,9 +990,9 @@ int main(int argc, char **argv)
 			errx(EXIT_FAILURE, _("log multiple streams is mutually "
 					     "exclusive with 'classic' format"));
 		if (outfile)
-			log_associate(&ctl, &ctl.out, timingfile, format);
+			log_associate(&ctl, &ctl.out, timingfile, 0, format);
 		if (infile)
-			log_associate(&ctl, &ctl.in, timingfile, format);
+			log_associate(&ctl, &ctl.in, timingfile, 0, format);
 	}
 
 	shell = ul_default_shell(0, NULL);
@@ -1020,6 +1038,10 @@ int main(int argc, char **argv)
 	 * We have terminal, do not use err() from now, use "goto done"
 	 */
 
+	rc = logging_start(&ctl);
+	if (rc)
+		goto done;
+
 	switch ((int) (ctl.child = fork())) {
 	case -1: /* error */
 		warn(_("cannot create child process"));
@@ -1058,10 +1080,6 @@ int main(int argc, char **argv)
 
 	/* parent */
 	ul_pty_set_child(ctl.pty, ctl.child);
-
-	rc = logging_start(&ctl);
-	if (rc)
-		goto done;
 
 	/* add extra info to advanced timing file */
 	if (timingfile && format == SCRIPT_FMT_TIMING_MULTI) {
