@@ -351,7 +351,7 @@ checkusage:
 		$(usrbin_exec_PROGRAMS) $(usrsbin_exec_PROGRAMS)
 
 testcoverage:
-	@ $(top_srcdir)/tools/testcoverage.sh $(top_srcdir) --show-missing-opts
+	@ $(top_srcdir)/tools/testcoverage.sh $(top_srcdir) --show-missing-opts $(ARGS)
 
 checklibdoc:
 	@ $(top_srcdir)/tools/checklibdocs.sh \
