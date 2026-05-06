@@ -1932,6 +1932,7 @@ static void mark_poll_fds_as_multiplexed(char *buf,
 {
 	long fds;
 	long nfds;
+	long max_nfds;
 
 	struct iovec  local;
 	struct iovec  remote;
@@ -1942,11 +1943,19 @@ static void mark_poll_fds_as_multiplexed(char *buf,
 	if (sscanf(buf, "%lx %lx", &fds, &nfds) != 2)
 		return;
 
-	if (nfds == 0)
+	if (nfds <= 0)
+		/* Unexpected value */
+		return;
+
+	max_nfds = sysconf (_SC_OPEN_MAX);
+	if (max_nfds >= 0 && nfds > max_nfds)
 		return;
 
 	local.iov_len = sizeof(struct pollfd) * nfds;
-	local.iov_base = xmalloc(local.iov_len);
+	local.iov_base = malloc(local.iov_len);
+	if (!local.iov_base)
+		goto out;
+
 	remote.iov_len = local.iov_len;
 	remote.iov_base = (void *)fds;
 
@@ -1987,7 +1996,8 @@ static void mark_select_fds_as_multiplexed(char *buf,
 	if (sscanf(buf, "%lx %lx %lx %lx", &nfds, fds + 0, fds + 1, fds + 2) != 4)
 		return;
 
-	if (nfds == 0)
+	if (nfds <= 0)
+		/* Unexpected value */
 		return;
 
 	for (int i = 0; i < 3; i++) {
@@ -2000,7 +2010,7 @@ static void mark_select_fds_as_multiplexed(char *buf,
 
 	n = process_vm_readv(pid, local, 3, remote, 3, 0);
 	if (n < 0 || n != expected_n)
-			return;
+		return;
 
 	list_for_each (f, &proc->files) {
 		struct file *file = list_entry(f, struct file, files);
