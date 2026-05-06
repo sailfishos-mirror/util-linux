@@ -4047,6 +4047,16 @@ if not is_disabler(exe)
   exes += exe
 endif
 
+exe = executable(
+  'test_child_create',
+  'tests/helpers/test_child_create.c',
+  include_directories : includes,
+  link_with : lib_common,
+  build_by_default: program_tests)
+if not is_disabler(exe)
+  exes += exe
+endif
+
 ############################################################
 
 if conf.get('HAVE_OPENAT').to_string() == '1'
